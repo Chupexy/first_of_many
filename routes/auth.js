@@ -25,7 +25,7 @@ router.post('/signup', async(req, res) =>{
          user.phone_no = phone_no
          user.gender = ""
          user.timestamp = timestamp
-         user.age = ""
+         user.age = 
 
          await user.save()
          return res.status(200).send({status: 'ok', msg:'Account created successfully'})
@@ -35,3 +35,5 @@ router.post('/signup', async(req, res) =>{
         return res.status(500).send({status: 'error', msg:'An error occured'})
     }
 })
+
+module.exports = router

@@ -25,6 +25,7 @@ app.use(express.urlencoded({extended: true}))
 
 //routes
 app.use('/auth', require('./routes/auth'))
+app.use('/profile', require('./routes/profile'))
 
 
 const port = process.env.PORT

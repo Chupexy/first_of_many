@@ -9,6 +9,8 @@ const userSchema = new Schema({
     is_online:{type: Boolean, default: false },
     age: Number,
     gender: String,
+    img_id: String,
+    img_url: String,
     timestamp: Number
 }, {collection: 'User'})
 

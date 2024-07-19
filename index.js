@@ -26,6 +26,8 @@ app.use(express.urlencoded({extended: true}))
 //routes
 app.use('/auth', require('./routes/auth'))
 app.use('/profile', require('./routes/profile'))
+app.use('/posts', require('./routes/posts'))
+app.use('/like', require('./routes/likes'))
 
 
 const port = process.env.PORT

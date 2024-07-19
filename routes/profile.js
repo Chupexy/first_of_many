@@ -84,5 +84,25 @@ router.post('/view_profile', async(req, res) =>{
     }
 })
 
+//endpoint to view single profile
+router.post('/view_single_profile', async(req, res) =>{
+    const {token, user_id} = req.body
+    if(!token || !user_id)
+        return res.status(400).send({status: 'error', msg: 'All fields must be filled'})
+    
+    try {
+        jwt.verify(token, process.env.JWT_SECRET)
+        const Muser = await User.findOne({_id: user_id}).lean()
+
+        return res.status(200).send({status: 'ok', msg: 'Successful', Muser})
+        
+    } catch (error) {
+        console.log(error)
+        if(error.name == "JsonWebTokenError")
+            return res.status(400).send({status: 'error', msg: 'Invalid token'})
+
+        return res.status(500).send({status: 'error', msg:'An error occured'}) 
+    }
+})
 
 module.exports = router

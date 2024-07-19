@@ -11,7 +11,8 @@ const userSchema = new Schema({
     gender: String,
     img_id: String,
     img_url: String,
-    timestamp: Number
+    timestamp: Number, 
+    post_count: {type: Number, default: 0}
 }, {collection: 'User'})
 
 const model = mongoose.model('user', userSchema)

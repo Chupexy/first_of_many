@@ -16,7 +16,7 @@ try {
     const user = jwt.verify(token, process.env.JWT_SECRET)
 
     await Post.findOneAndUpdate({_id: post_id}, {
-        $inc: {likes: +1},
+        $inc: {likes: 1},
         $push: {like_ids: user._id}
     })
 
@@ -30,5 +30,31 @@ try {
     return res.status(500).send({status: 'error', msg:'An error occured'})
 }
 })
+
+//endpoint to unlike
+router.post('/unlike_post', async(req, res) =>{
+    const {token, post_id} = req.body
+if(!token || !post_id)
+    return res.status(400).send({status: 'error', msg:'Token required'})
+
+try {
+    const user = jwt.verify(token, process.env.JWT_SECRET)
+
+    await Post.findOneAndUpdate({_id: post_id}, {
+        $inc: {likes: -1},
+        $pull: {like_ids: user._id}
+    })
+
+    return res.status(200).send({status: 'ok', msg: 'Successful Operation'})
+    
+} catch (error) {
+    console.log(error)
+    if(error.name == "JsonWebTokenError")
+        return res.status(400).send({status: 'error', msg: 'Invalid token'})
+
+    return res.status(500).send({status: 'error', msg:'An error occured'})
+}
+})
+
 
 module.exports = router

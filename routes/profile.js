@@ -105,4 +105,42 @@ router.post('/view_single_profile', async(req, res) =>{
     }
 })
 
+
+// change password
+router.post('/change_password', async(req, res) =>{
+    const {token, password, new_password, confirm_new_password} = req.body
+    if(!token || !password || !new_password || !confirm_new_password)
+        return res.status(400).send({status: 'error', msg: 'All fields must be filled'})
+
+    try {
+        //verify user
+        const user = jwt.verify(token, process.env.JWT_SECRET)
+
+        //get user document
+        let Muser = await User.findOne({_id: user._id}, {password: 1}).lean()
+
+        //confirm password matches with database password
+        const correct = await bcrypt.compare(password, Muser.password)
+
+        if(correct ){
+             if(new_password !== confirm_new_password)
+                return res.status(400).send({status: 'error', msg: 'New password fields missmatch'})
+
+             const hashedpassword = await bcrypt.hash(new_password, 10)
+             await User.findOneAndUpdate({_id: user._id}, {password: hashedpassword}, {new: true}).lean()
+
+             return res.status(200).send({status: 'ok', msg: 'Password successfully updated'})
+        }
+
+        return res.status(400).send({status: 'error', msg: 'Password missmatch'})
+            
+    } catch (error) {
+        console.log(error)
+        if(error.name == "JsonWebTokenError")
+            return res.status(400).send({status: 'error', msg: 'Invalid token'})
+
+        return res.status(500).send({status: 'error', msg:'An error occured'})
+    }
+})
+
 module.exports = router

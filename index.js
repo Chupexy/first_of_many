@@ -28,6 +28,7 @@ app.use('/auth', require('./routes/auth'))
 app.use('/profile', require('./routes/profile'))
 app.use('/posts', require('./routes/posts'))
 app.use('/like', require('./routes/likes'))
+app.use('/comment', require('./routes/comments'))
 
 
 const port = process.env.PORT
